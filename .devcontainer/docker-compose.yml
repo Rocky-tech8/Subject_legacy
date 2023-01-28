@@ -1,0 +1,18 @@
+version: '3'
+services:
+    dev:
+        build: ./php
+        volumes:
+            - ../work:/var/www/html
+    db:
+        build: ./mysql
+        volumes:
+            - ./mysql/db:/var/lib/mysql
+            - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+        user: "1000:50"
+        environment:
+            MYSQL_DATABASE: sampledb
+            MYSQL_USER: dbuser
+            MYSQL_PASSWORD: 1234
+            MYSQL_ROOT_PASSWORD: 1234
+    
