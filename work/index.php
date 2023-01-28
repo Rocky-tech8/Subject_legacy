@@ -6,7 +6,7 @@
   </head>
   <body>
     <p><お問い合わせフォーム></p>
-    <form action="" method="post">
+    <form id="contact-form">
       <dl>
         <dt>氏名【必須】</dt>
         <dd>
@@ -54,7 +54,39 @@
           <textarea name="question2" rows="10" cols="50" maxlength="1001" required></textarea>
         </dd>
       </dl>
-      <input type="submit" value="送信">
+      <input type="submit" value="送信" class="send-btn" id="submit">
     </form>
+    <p class="contact-result"></p>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script>
+    $('#contact-form').submit(function(event){
+        event.preventDefault();
+        var $form = $(this);
+        var $button = $('#submit');
+        $.ajax({
+            url:"send.php",
+            type:'POST',
+            data: $form.serialize(),
+            timeout:1000000,
+            beforeSend: function(xhr, settings) {
+                $button.attr('disabled', true);
+            },
+            complete: function(xhr, textStatus) {
+                $button.attr('disabled', false);
+            }
+        }).done(function(data, textStatus, jqXHR){
+            // 成功の場合処理
+            // $form[0].reset();
+            $(".contact-result").text(data);
+            $(".contact-result").slideToggle(200);
+            $(".contact-result").delay(3000).slideToggle(200);
+        }).fail(function(jqXHR, textStatus, errorThrown){
+            // エラーの場合処理
+            $(".contact-result").text("エラーが発生しました。ステータス：" + jqXHR.status);
+            $(".contact-result").slideToggle(100);
+            $(".contact-result").delay(3000).slideToggle(200);
+        });
+    });
+</script>
   </body>
 </html>
